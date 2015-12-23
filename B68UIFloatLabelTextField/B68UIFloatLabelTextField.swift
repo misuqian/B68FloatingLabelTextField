@@ -74,7 +74,7 @@ public class B68UIFloatLabelTextField: UITextField {
   }
   
   //MARK: Nib/Storyboard Initializers
-  required public init(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     setup()
   }
@@ -107,7 +107,7 @@ public class B68UIFloatLabelTextField: UITextField {
   }
   
   override public func hasText() ->Bool {
-    return !text.isEmpty
+    return self.text! != ""
   }
   
   //MARK: Setup
@@ -141,7 +141,7 @@ public class B68UIFloatLabelTextField: UITextField {
   private func applyFonts() {
     
     // set floatingLabel to have the same font as the textfield
-    floatingLabel.font = UIFont(name: font.fontName, size: UIFont.preferredFontForTextStyle(placeHolderTextSize).pointSize)
+    floatingLabel.font = UIFont(name: font!.fontName, size: UIFont.preferredFontForTextStyle(placeHolderTextSize).pointSize)
   }
   
   private func setupViewDefaults() {
@@ -160,10 +160,10 @@ public class B68UIFloatLabelTextField: UITextField {
   //MARK: - Drawing & Animations
   override public func layoutSubviews() {
     super.layoutSubviews()
-    if (isFirstResponder() && !hasText()) {
-      hideFloatingLabel()
-    } else if(hasText()) {
-      showFloatingLabelWithAnimation(true)
+    if (!isFirstResponder() && !hasText()) {
+        hideFloatingLabel()
+    } else {
+        showFloatingLabelWithAnimation(true)
     }
   }
   
@@ -176,7 +176,7 @@ public class B68UIFloatLabelTextField: UITextField {
       CGRectGetHeight(self.floatingLabel.frame)
     )
     if (isAnimated) {
-      let options = UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.CurveEaseOut
+      let options: UIViewAnimationOptions = [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseOut]
       UIView.animateWithDuration(0.2, delay: 0, options: options, animations: {
         self.floatingLabel.alpha = 1
         self.floatingLabel.frame = fl_frame
@@ -194,8 +194,7 @@ public class B68UIFloatLabelTextField: UITextField {
       CGRectGetWidth(self.floatingLabel.frame),
       CGRectGetHeight(self.floatingLabel.frame)
     )
-    let options = UIViewAnimationOptions.BeginFromCurrentState |
-      UIViewAnimationOptions.CurveEaseIn
+    let options: UIViewAnimationOptions = [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseIn]
     UIView.animateWithDuration(0.2, delay: 0, options: options, animations: {
       self.floatingLabel.alpha = 0
       self.floatingLabel.frame = fl_frame
